@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    internal class Journey
+    public class Journey
     {
         public List<Flight> Flights { get; set; }   
-        public string origin { get; set; }
-        public string destination { get; set; }
-        public double price { get; set; }
+        public string Oigin { get; set; }
+        public string Destination { get; set; }
+        public double Price { get; set; }
 
     }
 }

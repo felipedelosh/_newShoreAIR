@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    internal class Transport
+    public class Transport
     {
         public string FlightCarrier { get; set; }
         public string FlightNumber { get; set; }

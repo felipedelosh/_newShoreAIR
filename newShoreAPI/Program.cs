@@ -1,3 +1,6 @@
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using newShoreAPI.IOC;
 using NLog;
 using NLog.Web;
 
@@ -9,6 +12,30 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    //const to do ANGULAR
+    var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+
+    // Add services to the container.
+    builder.Services.AddControllersWithViews();
+
+    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+        .ConfigureContainer<ContainerBuilder>(builder =>
+        {
+            builder.RegisterModule(new AutofacBusinessModule());
+        });
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+                          policy =>
+                          {
+                              policy.WithOrigins("*"
+                                                  );
+                          });
+    });
+
+
     // Add services to the container.
 
     builder.Services.AddControllers();
@@ -16,8 +43,15 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    //Configure logs
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
+    //End configure logs
+
+
+
+
+
 
     var app = builder.Build();
 
