@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Helper.Cache;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace Helper
 {
     public class GetAPIData
     {
+
+        private CacheController cache = new CacheController();
+      
         public string GetHTTPServiceVr0(string url)
         {
             return GetHTTPServiceVrX(url, "0");
@@ -26,6 +30,7 @@ namespace Helper
         }
 
 
+
         /// <summary>
         /// Enter a ID of GET api response and try to return Json
         /// </summary>
@@ -33,24 +38,32 @@ namespace Helper
         /// <returns></returns>
         public string GetHTTPServiceVrX(string url, string v)
         {
-
-
             var response = string.Empty;
             try
             {
-                var client = new RestClient(url + "/" + v);
-                var request = new RestRequest();
-                request.Method = Method.Get;
-                request.AddHeader("Content-Type", "application/json");
-                RestResponse result = client.Execute(request);
+                string _url = url + "/" + v;
+                if (cache.isTheUrlDataInCache(_url)) {
+                    response = cache.GetCacheByKey(_url);
+                    Console.WriteLine("==========Get Cache Data==========");
+                }
+                else {
+                    var client = new RestClient(_url);
+                    var request = new RestRequest();
+                    request.Method = Method.Get;
+                    request.AddHeader("Content-Type", "application/json");
+                    RestResponse result = client.Execute(request);
 
-                if (result.IsSuccessStatusCode)
-                {
-                    if (result.Content != null)
+                    if (result.IsSuccessStatusCode)
                     {
-                        response = result.Content;
+                        if (result.Content != null)
+                        {
+                            response = result.Content;
+                            cache.AddCacheItem(_url, response);
+                            Console.WriteLine("==========Save Cache Data==========");
+                        }
                     }
                 }
+
             }
             catch (Exception ex)
             {
