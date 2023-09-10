@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Models.Third;
 using System.Linq.Expressions;
+using Helper.RoutesCalculator;
+using System.Xml.Linq;
 
 namespace Business.Availability
 {
@@ -15,11 +17,13 @@ namespace Business.Availability
 
         private readonly IConfiguration _iconfiguraion;
         private readonly GetAPIData getAPIData;
+        private Graph routes;
 
         public AvailabilityBusiness(IConfiguration iconfiguraion)
         {
             _iconfiguraion = iconfiguraion;
             getAPIData = new GetAPIData();
+            routes = new Graph();
         }
 
         public string getFlightsV0()
@@ -60,6 +64,21 @@ namespace Business.Availability
                 }
 
                 var flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
+                //Contruct Graph
+                Console.WriteLine("==========Make Graph==========");
+                //Reset routes
+                routes = new Graph();
+                foreach (var n in flightsResponse) {
+                    var nodeA = n.DepartureStation;
+                    var nodeB = n.ArrivalStation;
+                    var price = n.Price;
+                    routes.AddNode(nodeA);
+                    routes.AddNode(nodeB);
+                    //Save conection
+                    routes.addEdge(nodeA, nodeB, price);
+                }
+
+                
                 response = JsonConvert.SerializeObject(flightsResponse);
 
             }
@@ -89,10 +108,9 @@ namespace Business.Availability
             return list;
         }
 
-
-
-
-
-
+        public string getGraph()
+        {
+            return routes.getRoutes();
+        }
     }
 }

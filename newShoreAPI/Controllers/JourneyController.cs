@@ -102,6 +102,30 @@ namespace newShoreAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetGraph")]
+        public dynamic GetGraph(string Authorization)
+        {
+            try
+            {
+                if (_authentication.isTokenValid(Authorization))
+                {
+                    string data = _availabilityBusines.getGraph();
+                    return getStandardJsonResponse("200", "v1.0", data);
+                }
+                else
+                {
+                    _logger.LogInformation("the user insert invalid token");
+                    return getStandardJsonResponse("401", "v1.0", Authorization + ": is Invalid token");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal Server Error Get()");
+                return getStandardJsonResponse("500", "v1.0", ex.ToString());
+            }
+        }
+
 
         private dynamic getStandardJsonResponse(string _statusCode, string _metadata, string _data) {
             return new

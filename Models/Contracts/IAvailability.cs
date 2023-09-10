@@ -13,6 +13,8 @@ namespace Models.Contracts
         string getFlightsV0();
         string getFlightsV1();
         string getFlightsV2();
+
+        string getGraph();
     }
 
 }

@@ -131,6 +131,8 @@
     <Compile Include="Cache\CacheItem.cs" />
     <Compile Include="GetAPIData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoutesCalculator\Edge.cs" />
+    <Compile Include="RoutesCalculator\Graph.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
