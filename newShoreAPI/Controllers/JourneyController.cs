@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using Models.Contracts;
 using Models;
+using Helper;
 
 namespace newShoreAPI.Controllers
 {
@@ -24,20 +25,62 @@ namespace newShoreAPI.Controllers
         [Route("Health")]
         public dynamic getHealth() {
             _logger.LogInformation("the user PING the API status");
-            return getStandarJsonResponse("200", "v1.0", "[]");
+            return getStandardJsonResponse("200", "v1.0", "[]");
         }
+
 
         [HttpGet]
-        [Route("flightsv0")]
-        public dynamic getflightsV0() {
-            //Token auto ...
-            var  request = new ModelRequesFlights() { Origin="x", Destination="z" };
-            return _availabilityBusines.ListFlights(request);
+        [Route("getFlightsV0")]
+        public dynamic getFlightsV0() {
+            try {
+                var request = new ModelRequesFlights() { Origin = "x", Destination = "z" };
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV0().ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal Server Error getFlightsV0()");
+                return getStandardJsonResponse("500", "ERROR", ex.ToString());
+            }
         }
 
 
 
-        private dynamic getStandarJsonResponse(string _statusCode, string _metadata, string _data) {
+
+        [HttpGet]
+        [Route("getFlightsV1")]
+        public dynamic getFlightsV1()
+        {
+            try
+            {
+                var request = new ModelRequesFlights() { Origin = "x", Destination = "z" };
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV1().ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal Server Error getFlightsV0()");
+                return getStandardJsonResponse("500", "ERROR", ex.ToString());
+            }
+        }
+
+
+        [HttpGet]
+        [Route("getFlightsV2")]
+        public dynamic getFlightsV2()
+        {
+            try
+            {
+                var request = new ModelRequesFlights() { Origin = "x", Destination = "z" };
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV2().ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal Server Error getFlightsV0()");
+                return getStandardJsonResponse("500", "ERROR", ex.ToString());
+            }
+        }
+
+
+        private dynamic getStandardJsonResponse(string _statusCode, string _metadata, string _data) {
             return new
             {
                 status = _statusCode,

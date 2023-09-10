@@ -9,6 +9,10 @@ namespace Models.Contracts
     public interface IAvailability
     {
         List<Flight> ListFlights(ModelRequesFlights requestF);
+
+        string getFlightsV0();
+        string getFlightsV1();
+        string getFlightsV2();
     }
 
 }

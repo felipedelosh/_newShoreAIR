@@ -1,7 +1,10 @@
 ﻿using Autofac;
+using AutoMapper;
 using Business.Availability;
+using Business.Mapper;
 using Models;
 using Models.Contracts;
+using Models.Third;
 
 namespace newShoreAPI.IOC
 {
@@ -11,13 +14,19 @@ namespace newShoreAPI.IOC
         {
             builder.RegisterType<AvailabilityBusiness>().As<IAvailability>().SingleInstance();
 
+            builder.RegisterType<APIResponseFlights<List<Flight>, List<GetJsonFlightResponse>>>().As<IMap<List<Flight>, List<GetJsonFlightResponse>>>().SingleInstance();
 
-            /*
+            builder.RegisterType<Flight_Transport<Transport, GetJsonFlightResponse>>().As<IMap<Transport, GetJsonFlightResponse>>().SingleInstance();
+
+
+
+
             builder.Register(context => new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<List<FlightResponse>, List<Flight>>();
+                cfg.CreateMap<List<GetJsonFlightResponse>, List<Flight>>();
                 //etc...
             })).AsSelf().SingleInstance();
+
 
             builder.Register(c =>
             {
@@ -28,8 +37,7 @@ namespace newShoreAPI.IOC
             })
             .As<IMapper>()
             .InstancePerLifetimeScope();
-            */
-            
+
         }
     }
 }
