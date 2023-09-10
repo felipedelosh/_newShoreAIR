@@ -13,12 +13,14 @@ namespace newShoreAPI.Controllers
 
         private readonly ILogger<JourneyController> _logger;
         private readonly IAvailability _availabilityBusines;
-        
+        private readonly Authentication _authentication;
+
 
 
         public JourneyController(ILogger<JourneyController> logger, IAvailability availabilityBusines) {
             _logger = logger;
             _availabilityBusines = availabilityBusines;
+            _authentication = new Authentication();
         }
 
         [HttpGet]
@@ -26,6 +28,27 @@ namespace newShoreAPI.Controllers
         public dynamic getHealth() {
             _logger.LogInformation("the user PING the API status");
             return getStandardJsonResponse("200", "v1.0", "[]");
+        }
+
+        [HttpGet()]
+        [Route("Get")]
+        public dynamic Get(string origin, string destination, string Authorization)
+        {
+            try {
+                if (_authentication.isTokenValid(Authorization))
+                {
+                    return getStandardJsonResponse("200", "v1.0", Authorization + ": Token OK");
+                }
+                else {
+                    _logger.LogInformation("the user insert invalid token");
+                    return getStandardJsonResponse("401", "v1.0", Authorization + ": is Invalid token");
+                }
+            }
+            catch (Exception ex) {
+                _logger.LogError("Internal Server Error Get()");
+                return getStandardJsonResponse("500", "v1.0", ex.ToString());
+            }
+            
         }
 
 

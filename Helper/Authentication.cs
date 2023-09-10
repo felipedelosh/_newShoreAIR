@@ -18,17 +18,19 @@ namespace Helper
         /// <returns></returns>
         public bool isTokenValid(string token)
         {
-
+            //Simulate to get Database : get Token By User
             const string TOKEN = "kmzwa8awaa";
 
             try
             {
-                string _t = token.Split(' ')[1];
-                return _t == TOKEN;
-            }
-            catch (Exception ex)
-            {
+                string [] _t = new string[2];
+                _t[0] = token.Split(' ')[0];
+                _t[1] = token.Split(' ')[1];
 
+                return (_t[0].ToLower() == "bearer" || _t[0].ToLower() == "apikey") && (_t[1] == TOKEN);
+            }
+            catch
+            {
                 return false;
             }
 
