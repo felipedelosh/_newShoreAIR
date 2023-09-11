@@ -129,6 +129,7 @@
     <Compile Include="Authentication.cs" />
     <Compile Include="Cache\CacheController.cs" />
     <Compile Include="Cache\CacheItem.cs" />
+    <Compile Include="CurriencesConverter.cs" />
     <Compile Include="GetAPIData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutesCalculator\Edge.cs" />

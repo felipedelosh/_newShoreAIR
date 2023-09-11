@@ -19,6 +19,7 @@ namespace Business.Availability
         private readonly GetAPIData getAPIData;
         private Graph routes;
         private ShortestPathFinder shortestPathFinder;
+        private CurriencesConverter curriencesConverter;
 
         public AvailabilityBusiness(IConfiguration iconfiguraion)
         {
@@ -26,6 +27,7 @@ namespace Business.Availability
             getAPIData = new GetAPIData();
             routes = new Graph();
             shortestPathFinder = new ShortestPathFinder(routes);
+            curriencesConverter = new CurriencesConverter();
         }
 
         public string getFlightsV0()
@@ -101,7 +103,7 @@ namespace Business.Availability
             return routes.getRoutes();
         }
 
-        public Journey GetJourney(ModelRequesFlights requestF)
+        public Journey GetJourney(ModelRequesFlights requestF, string Currience_selector)
         {
             Journey response = new Journey();
             try
@@ -116,7 +118,7 @@ namespace Business.Availability
                 var sizeOfResponse = shortestPath.Count;
                 response.Oigin = _origin;
                 response.Destination = _destination;
-                formatJournetData(response, shortestPathFinder.isValidRoute, shortestPath);
+                formatJournetData(response, shortestPathFinder.isValidRoute, shortestPath, Currience_selector);
             }
             catch {
                 throw;
@@ -126,7 +128,7 @@ namespace Business.Availability
             return response;
         }
 
-        private void formatJournetData(Journey j, bool isValidRoute, List<string> data) {
+        private void formatJournetData(Journey j, bool isValidRoute, List<string> data, string Currience_selector) {
             var sizeData = data.Count;
 
             if (sizeData == 0)
@@ -154,7 +156,19 @@ namespace Business.Availability
                         flights.Add(f);
                     }
                     j.Flights = flights;
-                    j.Price = totalPrice;
+
+                    var tempPrice = curriencesConverter.GetInConvertion(Currience_selector, totalPrice);
+
+                    if (tempPrice >= 0)
+                    {
+                        j.Price = tempPrice;
+                        j.Message += $"convertion price.\nReturn value in {Currience_selector}\n";
+                    }
+                    else {
+                        j.Price = totalPrice;
+                        j.Message += $"Error in convertion price.\nReturn value in USD\n";
+                    }
+                   
                 }
                 
             }

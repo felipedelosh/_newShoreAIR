@@ -33,13 +33,13 @@ namespace newShoreAPI.Controllers
 
         [HttpGet()]
         [Route("Get")]
-        public dynamic Get(string origin, string destination, string Authorization)
+        public dynamic Get(string origin, string destination, string Authorization, string Currience_selector)
         {
             try {
                 if (_authentication.isTokenValid(Authorization))
                 {
                     var request = new ModelRequesFlights() { Origin = origin, Destination = destination };
-                    var fligtsData = _availabilityBusines.GetJourney(request);
+                    var fligtsData = _availabilityBusines.GetJourney(request, Currience_selector);
 
                     //Export data to Json
                     var endData = JsonConvert.SerializeObject(fligtsData);
