@@ -8,7 +8,8 @@ namespace Models.Contracts
 {
     public interface IAvailability
     {
-        List<Flight> ListFlights(ModelRequesFlights requestF);
+
+        Journey GetJourney(ModelRequesFlights requestF);
 
         string getFlightsV0();
         string getFlightsV1();

@@ -18,12 +18,14 @@ namespace Business.Availability
         private readonly IConfiguration _iconfiguraion;
         private readonly GetAPIData getAPIData;
         private Graph routes;
+        private ShortestPathFinder shortestPathFinder;
 
         public AvailabilityBusiness(IConfiguration iconfiguraion)
         {
             _iconfiguraion = iconfiguraion;
             getAPIData = new GetAPIData();
             routes = new Graph();
+            shortestPathFinder = new ShortestPathFinder(routes);
         }
 
         public string getFlightsV0()
@@ -78,7 +80,11 @@ namespace Business.Availability
                     routes.addEdge(nodeA, nodeB, price);
                 }
 
-                
+                //Save the Graph in route calculator
+                shortestPathFinder = new ShortestPathFinder(routes);
+
+
+                //Save the response
                 response = JsonConvert.SerializeObject(flightsResponse);
 
             }
@@ -89,28 +95,68 @@ namespace Business.Availability
             return response;
         }
 
-        public List<Flight> ListFlights(ModelRequesFlights requestF)
-        {
-            List<Flight> list = new List<Flight>();
-
-            try
-            {
-                var url = _iconfiguraion.GetSection("AppSettings").GetSection("urlAPIFlights").Value;
-
-                
-            }
-            catch (Exception ex)
-            {
-                //logger
-                throw;
-            }
-
-            return list;
-        }
 
         public string getGraph()
         {
             return routes.getRoutes();
         }
+
+        public Journey GetJourney(ModelRequesFlights requestF)
+        {
+            Journey response = new Journey();
+            try
+            {
+                // Calculates a route
+                string _origin = requestF.Origin;
+                string _destination = requestF.Destination;
+              
+                List<string> shortestPath = shortestPathFinder.FindShortestPath(_origin, _destination);
+
+                //Contruct a response
+                var sizeOfResponse = shortestPath.Count;
+                response.Oigin = _origin;
+                response.Destination = _destination;
+                formatJournetData(response, shortestPathFinder.isValidRoute, shortestPath);
+            }
+            catch {
+                throw;
+            }
+
+
+            return response;
+        }
+
+        private void formatJournetData(Journey j, bool isValidRoute, List<string> data) {
+            Console.WriteLine("=============CALCULATES A ROUTE=================");
+            var sizeData = data.Count;
+
+            if (sizeData == 0)
+            {
+                j.Message = "It´s imposible to calculate route";
+            }
+            else 
+            {
+                if (!isValidRoute)
+                {
+                    j.Message = $"Erros {sizeData} data:\n";
+                    foreach (var i in data) {
+                        j.Message += $"{i}\n";
+                    }
+                }
+                else 
+                {
+                    j.Message = $"Find {sizeData} data:\n";
+                    double totalPrice = 0;
+                    for (int i = 0; i < sizeData-1; i++) {
+                        Console.WriteLine($"Estamos en: {data[i]} : vamos para {data[i+1]}");
+                    }
+                    j.Price = totalPrice;
+                }
+                
+            }
+
+            Console.WriteLine("=============END CALCULATES A ROUTE=================");
+        }
+
     }
 }

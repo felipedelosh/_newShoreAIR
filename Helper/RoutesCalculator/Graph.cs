@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Helper.RoutesCalculator
 {
+    /// <summary>
+    /// This is a main class to Graph
+    /// Storages A,B points with the weight
+    /// An calculate the shortes path
+    /// </summary>
     public class Graph
     {
         public Dictionary<string, List<Edge>> node;
@@ -23,6 +29,16 @@ namespace Helper.RoutesCalculator
             }
         }
 
+
+        public bool havKey(string key) {
+            return node.ContainsKey(key);
+        }
+
+        public List<string> getAllKeys() {
+            List<string> keys = new List<string>(node.Keys);
+            return keys;
+        }
+
         public void addEdge(string nodeA, string nodeB, double weight) {
             if (node.ContainsKey(nodeA) && node.ContainsKey(nodeB))
             {
@@ -30,9 +46,15 @@ namespace Helper.RoutesCalculator
             }
         }
 
-            
+        /// <summary>
+        /// Retrun a String of Graph
+        /// nodeA:\n
+        /// (NodeB, w)
+        /// (NodeC, w)
+        /// ...
+        /// </summary>
+        /// <returns></returns>
         public string getRoutes() {
-
             string route = "";
 
             foreach (var n in node)
@@ -46,6 +68,11 @@ namespace Helper.RoutesCalculator
             }
 
             return route;
+        }
+
+
+        public bool isEmpty() {
+            return node.Count != 0;
         }
 
 

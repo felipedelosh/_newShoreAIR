@@ -3,6 +3,7 @@ using System.Text.Json.Nodes;
 using Models.Contracts;
 using Models;
 using Helper;
+using Newtonsoft.Json;
 
 namespace newShoreAPI.Controllers
 {
@@ -27,7 +28,7 @@ namespace newShoreAPI.Controllers
         [Route("Health")]
         public dynamic getHealth() {
             _logger.LogInformation("the user PING the API status");
-            return getStandardJsonResponse("200", "v1.0", "[]");
+            return getStandardJsonResponse("200", "v1.0", "the server is run :)");
         }
 
         [HttpGet()]
@@ -37,7 +38,12 @@ namespace newShoreAPI.Controllers
             try {
                 if (_authentication.isTokenValid(Authorization))
                 {
-                    return getStandardJsonResponse("200", "v1.0", Authorization + ": Token OK");
+                    var request = new ModelRequesFlights() { Origin = origin, Destination = destination };
+                    var fligtsData = _availabilityBusines.GetJourney(request);
+
+                    //Export data to Json
+                    var endData = JsonConvert.SerializeObject(fligtsData);
+                    return getStandardJsonResponse("200", "v1.0", endData);
                 }
                 else {
                     _logger.LogInformation("the user insert invalid token");
@@ -56,8 +62,7 @@ namespace newShoreAPI.Controllers
         [Route("getFlightsV0")]
         public dynamic getFlightsV0() {
             try {
-                var request = new ModelRequesFlights() { Origin = "x", Destination = "z" };
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV0().ToString());
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV0());
             }
             catch (Exception ex)
             {
@@ -75,8 +80,7 @@ namespace newShoreAPI.Controllers
         {
             try
             {
-                var request = new ModelRequesFlights() { Origin = "x", Destination = "z" };
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV1().ToString());
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV1());
             }
             catch (Exception ex)
             {
@@ -92,8 +96,7 @@ namespace newShoreAPI.Controllers
         {
             try
             {
-                var request = new ModelRequesFlights() { Origin = "x", Destination = "z" };
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV2().ToString());
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV2());
             }
             catch (Exception ex)
             {
