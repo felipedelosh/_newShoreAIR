@@ -127,7 +127,6 @@ namespace Business.Availability
         }
 
         private void formatJournetData(Journey j, bool isValidRoute, List<string> data) {
-            Console.WriteLine("=============CALCULATES A ROUTE=================");
             var sizeData = data.Count;
 
             if (sizeData == 0)
@@ -147,15 +146,54 @@ namespace Business.Availability
                 {
                     j.Message = $"Find {sizeData} data:\n";
                     double totalPrice = 0;
+                    List<Flight> flights = new List<Flight>();
                     for (int i = 0; i < sizeData-1; i++) {
-                        Console.WriteLine($"Estamos en: {data[i]} : vamos para {data[i+1]}");
+                        //Search Fligths in cache
+                        Flight f = searchFlightInCache(data[i], data[i+1]);
+                        totalPrice += f.Price;
+                        flights.Add(f);
                     }
+                    j.Flights = flights;
                     j.Price = totalPrice;
                 }
                 
             }
+        }
 
-            Console.WriteLine("=============END CALCULATES A ROUTE=================");
+        /// <summary>
+        /// Search a fly in cache and return Flight
+        /// </summary>
+        /// <param name="DepartureStation"></param>
+        /// <param name="ArrivalStation"></param>
+        /// <returns></returns>
+        private Flight searchFlightInCache(string DepartureStation, string ArrivalStation) {
+            Flight f = new Flight();
+
+            try
+            {
+                Console.WriteLine($"Serach fly en cache {DepartureStation} : {ArrivalStation}");
+                var lastUrl = getAPIData.GetLastAPIUrl();
+                var result = getAPIData.GetCacheDataByUrl(lastUrl);
+                var flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
+
+                foreach (var i in flightsResponse) {
+                    if (i.DepartureStation == DepartureStation && i.ArrivalStation == ArrivalStation) { 
+                        //How to invoke a Transpor mapper?
+                        //How to invoke a Journal mapper?
+                        Transport t = new Transport();
+                        t.FlightCarrier = i.FlightCarrier;
+                        t.FlightNumber  = i.FlightNumber;
+                        f.Transport = t;
+                        f.Origin = i.DepartureStation;
+                        f.Destination = i.ArrivalStation;
+                        f.Price = i.Price;
+                    }   
+                }
+            }
+            catch (Exception ex) {
+                return f;
+            }
+            return f;
         }
 
     }

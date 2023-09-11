@@ -29,7 +29,13 @@ namespace Helper
             return GetHTTPServiceVrX(url, "2");
         }
 
+        public string GetLastAPIUrl() {
+            return cache.lastUrl;
+        }
 
+        public string GetCacheDataByUrl(string url) {
+            return cache.GetCacheByKey(url);
+        }
 
         /// <summary>
         /// Enter a ID of GET api response and try to return Json

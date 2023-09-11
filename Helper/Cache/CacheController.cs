@@ -9,7 +9,8 @@ namespace Helper.Cache
 {
     public class CacheController
     {
-        public Dictionary<string, CacheItem> cacheMemory;
+        public Dictionary<string, CacheItem> cacheMemory { get; set; }
+        public string lastUrl { get; set; }
 
         public CacheController() { 
             cacheMemory = new Dictionary<string, CacheItem>();
@@ -17,6 +18,7 @@ namespace Helper.Cache
 
         public void AddCacheItem(string url, string data) {
             CacheItem temp = new CacheItem(url, data.ToString(), DateTime.Now);
+            lastUrl = url;
             cacheMemory[url] = temp;
         }
 
