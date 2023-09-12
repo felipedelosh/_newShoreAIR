@@ -4,6 +4,7 @@ using Models.Contracts;
 using Models;
 using Helper;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace newShoreAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace newShoreAPI.Controllers
             _authentication = new Authentication();
         }
 
+        [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("Health")]
         public dynamic getHealth() {
@@ -31,6 +33,7 @@ namespace newShoreAPI.Controllers
             return getStandardJsonResponse("200", "v1.0", "the server is run :)");
         }
 
+        [EnableCors("AllowOrigin")]
         [HttpGet()]
         [Route("Get")]
         public dynamic Get(string origin, string destination, string Authorization, string Currience_selector)
@@ -57,7 +60,7 @@ namespace newShoreAPI.Controllers
             
         }
 
-
+        [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("getFlightsV0")]
         public dynamic getFlightsV0() {
@@ -89,7 +92,7 @@ namespace newShoreAPI.Controllers
             }
         }
 
-
+        [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("getFlightsV2")]
         public dynamic getFlightsV2()
@@ -105,6 +108,7 @@ namespace newShoreAPI.Controllers
             }
         }
 
+        [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("GetGraph")]
         public dynamic GetGraph(string Authorization)

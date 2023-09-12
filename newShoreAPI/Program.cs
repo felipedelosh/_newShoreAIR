@@ -3,6 +3,7 @@ using Autofac;
 using newShoreAPI.IOC;
 using NLog;
 using NLog.Web;
+using Autofac.Core;
 
 var _logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 _logger.Debug("init main");
@@ -38,6 +39,9 @@ try
 
     // Add services to the container.
 
+    //Corps
+    builder.Services.AddCors();
+
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -61,6 +65,8 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    app.UseCors();
 
     app.UseHttpsRedirection();
 
