@@ -25,7 +25,7 @@ namespace Business.Availability
         {
             _logger = logger;
             _iconfiguraion = iconfiguraion;
-            getAPIData = new GetAPIData();
+            getAPIData = new GetAPIData(); //Como le mando el logger?
             routes = new Graph();
             shortestPathFinder = new ShortestPathFinder(routes);
             curriencesConverter = new CurriencesConverter();
@@ -70,7 +70,6 @@ namespace Business.Availability
 
                 var flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
                 //Contruct Graph
-                Console.WriteLine("==========Make Graph==========");
                 //Reset routes
                 routes = new Graph();
                 foreach (var n in flightsResponse) {
@@ -189,7 +188,7 @@ namespace Business.Availability
 
             try
             {
-                Console.WriteLine($"Serach fly en cache {DepartureStation} : {ArrivalStation}");
+               
                 string lastUrl = getAPIData.GetLastAPIUrl();
                 string result = getAPIData.GetCacheDataByUrl(lastUrl);
                 List<GetJsonFlightResponse> flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);

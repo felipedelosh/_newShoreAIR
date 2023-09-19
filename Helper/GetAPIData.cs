@@ -1,4 +1,5 @@
 ﻿using Helper.Cache;
+using Microsoft.Extensions.Logging;
 using RestSharp;
 using System;
 
@@ -8,7 +9,12 @@ namespace Helper
     {
 
         private CacheController cache = new CacheController();
-      
+       
+
+        public GetAPIData() {
+            //Como se agrega otro logger?
+        }
+
         public string GetHTTPServiceVr0(string url)
         {
             return GetHTTPServiceVrX(url, "0");
@@ -46,7 +52,6 @@ namespace Helper
                 string _url = $"{url}/{v}";
                 if (cache.isTheUrlDataInCache(_url)) {
                     response = cache.GetCacheByKey(_url);
-                    Console.WriteLine("==========Get Cache Data==========");
                 }
                 else {
                     RestClient client = new RestClient(_url);
@@ -61,15 +66,17 @@ namespace Helper
                         {
                             response = result.Content;
                             cache.AddCacheItem(_url, response);
-                            Console.WriteLine("==========Save Cache Data==========");
                         }
                     }
                 }
 
+
+                //_logger.LogInformation("The user get External Api information");
             }
             catch (Exception ex)
             {
-                response = "API_GET_ERR:" + ex;
+               // _logger.LogError($"Error to get data in external API {ex}");
+                response = $"API_GET_ERR: {ex}";
             }
 
             return response;
