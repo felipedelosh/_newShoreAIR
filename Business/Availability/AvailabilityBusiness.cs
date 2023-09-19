@@ -21,14 +21,17 @@ namespace Business.Availability
         private ShortestPathFinder shortestPathFinder;
         private CurriencesConverter curriencesConverter;
 
-        public AvailabilityBusiness(ILogger<AvailabilityBusiness> logger,IConfiguration iconfiguraion)
+        public AvailabilityBusiness(ILogger<AvailabilityBusiness> logger, IConfiguration iconfiguraion)
         {
             _logger = logger;
             _iconfiguraion = iconfiguraion;
             getAPIData = new GetAPIData(); //Como le mando el logger?
             routes = new Graph();
             shortestPathFinder = new ShortestPathFinder(routes);
-            curriencesConverter = new CurriencesConverter();
+            //Update curriences
+            string url = _iconfiguraion.GetSection("AppSettings").GetSection("applicationCurriences").Value;
+            string updateCurriences = getAPIData.GetDicHTTPServiceCurriences(url);
+            curriencesConverter = new CurriencesConverter(updateCurriences);
         }
 
         public string getFlightsV0()
@@ -50,7 +53,7 @@ namespace Business.Availability
         {
             string response = "";
             try {
-                var url = _iconfiguraion.GetSection("AppSettings").GetSection("urlAPIFlights").Value;
+                string url = _iconfiguraion.GetSection("AppSettings").GetSection("urlAPIFlights").Value;
                 var result = "";
 
                 switch (v)

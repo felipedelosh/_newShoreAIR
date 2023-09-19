@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using RestSharp;
 using System;
+using System.Collections.Generic;
+using System.Security.Policy;
 
 namespace Helper
 {
@@ -80,6 +82,39 @@ namespace Helper
             }
 
             return response;
+        }
+
+        public string GetDicHTTPServiceCurriences(string url)
+        {
+
+            string dataCurriences = "";
+
+            try
+            {
+                RestClient client = new RestClient(url);
+                RestRequest request = new RestRequest();
+                request.Method = Method.Get;
+                request.AddHeader("Content-Type", "application/json");
+                RestResponse result = client.Execute(request);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    if (result.Content != null)
+                    {
+                        dataCurriences = result.Content;
+                    }
+                }
+                else { 
+                    //LOgger falló consumir
+                }
+
+
+            }
+            catch (Exception ex) {
+                //Logger hay error
+            }
+
+            return dataCurriences;
         }
 
     }
