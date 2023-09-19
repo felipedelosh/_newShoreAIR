@@ -68,12 +68,12 @@ namespace newShoreAPI.Controllers
 
         [EnableCors("AllowOrigin")]
         [HttpGet]
-        [Route("getFlightsV0")]
-        public dynamic getFlightsV0()
+        [Route("getAllFlights")]
+        public dynamic getAllFlights()
         {
             try
             {
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV0());
+                return getStandardJsonResponse("200", "OK", _availabilityBusines.getAllFlights());
             }
             catch (Exception ex)
             {

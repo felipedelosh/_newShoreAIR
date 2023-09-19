@@ -33,6 +33,31 @@ namespace Business.Availability
             string updateCurriences = getAPIData.GetDicHTTPServiceCurriences(url);
             curriencesConverter = new CurriencesConverter(updateCurriences);
         }
+        
+
+        /// <summary>
+        /// Return a simple list of all flights to show in a banner
+        /// </summary>
+        /// <returns></returns>
+        public string getAllFlights()
+        {
+            string response = "";
+            try
+            {
+                string data = getFlightsV0();
+                List<GetJsonFlightResponse> flights = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(data);
+
+                foreach (var i in flights)
+                {
+                    response += $"Number:{i.FlightNumber}-(Origin:{i.DepartureStation}-Destination:{i.ArrivalStation})-Price:{i.Price}\n";
+                }
+
+            }
+            catch (Exception ex) {
+                _logger.LogError($"Error to get ALL flights routes {ex}");
+            }
+            return response;
+        }
 
         public string getFlightsV0()
         {
@@ -71,7 +96,7 @@ namespace Business.Availability
                         return "NO VALID OPTION";
                 }
 
-                var flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
+                List<GetJsonFlightResponse> flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
                 //Contruct Graph
                 //Reset routes
                 routes = new Graph();
@@ -100,12 +125,6 @@ namespace Business.Availability
             }
 
             return response;
-        }
-
-
-        public string getGraph()
-        {
-            return routes.getRoutes();
         }
 
         public Journey GetJourney(ModelRequesFlights requestF, string Currience_selector)
