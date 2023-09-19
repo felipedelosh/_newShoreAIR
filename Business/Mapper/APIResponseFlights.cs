@@ -16,10 +16,10 @@ namespace Business.Mapper
 
         P IMap<P, T>.Map(T origin)
         {
-            var flightResponse = new List<Flight>();
+            List<Flight> flightResponse = new List<Flight>();
 
             List<GetJsonFlightResponse> flights = (List<GetJsonFlightResponse>)Convert.ChangeType(origin, typeof(List<GetJsonFlightResponse>));
-            foreach (var flight in flights)
+            foreach (GetJsonFlightResponse flight in flights)
             {
                 var flightAux = new Flight();
                 flightAux.Origin = flight.DepartureStation;
@@ -30,7 +30,7 @@ namespace Business.Mapper
 
             }
 
-            return (P)(object)flightResponse; ;
+            return (P)(object)flightResponse;
         }
     }
 }
