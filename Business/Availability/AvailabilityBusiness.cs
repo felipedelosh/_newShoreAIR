@@ -74,9 +74,9 @@ namespace Business.Availability
                 //Reset routes
                 routes = new Graph();
                 foreach (var n in flightsResponse) {
-                    var nodeA = n.DepartureStation;
-                    var nodeB = n.ArrivalStation;
-                    var price = n.Price;
+                    string nodeA = n.DepartureStation;
+                    string nodeB = n.ArrivalStation;
+                    double price = n.Price;
                     routes.AddNode(nodeA);
                     routes.AddNode(nodeB);
                     //Save conection
@@ -118,7 +118,7 @@ namespace Business.Availability
                 List<string> shortestPath = shortestPathFinder.FindShortestPath(_origin, _destination);
 
                 //Contruct a response
-                var sizeOfResponse = shortestPath.Count;
+                int sizeOfResponse = shortestPath.Count;
                 response.Oigin = _origin;
                 response.Destination = _destination;
                 formatJournetData(response, shortestPathFinder.isValidRoute, shortestPath, Currience_selector);
@@ -132,7 +132,7 @@ namespace Business.Availability
         }
 
         private void formatJournetData(Journey j, bool isValidRoute, List<string> data, string Currience_selector) {
-            var sizeData = data.Count;
+            int sizeData = data.Count;
 
             if (sizeData == 0)
             {
@@ -160,7 +160,7 @@ namespace Business.Availability
                     }
                     j.Flights = flights;
 
-                    var tempPrice = curriencesConverter.GetInConvertion(Currience_selector, totalPrice);
+                    double tempPrice = curriencesConverter.GetInConvertion(Currience_selector, totalPrice);
 
                     if (tempPrice >= 0)
                     {
@@ -189,11 +189,11 @@ namespace Business.Availability
             try
             {
                 Console.WriteLine($"Serach fly en cache {DepartureStation} : {ArrivalStation}");
-                var lastUrl = getAPIData.GetLastAPIUrl();
-                var result = getAPIData.GetCacheDataByUrl(lastUrl);
-                var flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
+                string lastUrl = getAPIData.GetLastAPIUrl();
+                string result = getAPIData.GetCacheDataByUrl(lastUrl);
+                List<GetJsonFlightResponse> flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(result);
 
-                foreach (var i in flightsResponse) {
+                foreach (GetJsonFlightResponse i in flightsResponse) {
                     if (i.DepartureStation == DepartureStation && i.ArrivalStation == ArrivalStation) { 
                         //How to invoke a Transpor mapper?
                         //How to invoke a Journal mapper?
