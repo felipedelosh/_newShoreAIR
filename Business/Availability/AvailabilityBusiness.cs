@@ -121,10 +121,11 @@ namespace Business.Availability
                 int sizeOfResponse = shortestPath.Count;
                 response.Oigin = _origin;
                 response.Destination = _destination;
+                _logger.LogInformation("The user get journey information");
                 formatJournetData(response, shortestPathFinder.isValidRoute, shortestPath, Currience_selector);
             }
-            catch {
-                throw;
+            catch (Exception ex){
+                _logger.LogError($"Error in GetJourney {ex}");
             }
 
 
@@ -208,9 +209,12 @@ namespace Business.Availability
                         f.Price = i.Price;
                     }   
                 }
+
+                _logger.LogInformation("The user get information via cache.");
             }
             catch (Exception ex) {
-                return f;
+                _logger.LogError("Error while the user search information in cache.");
+      
             }
             return f;
         }
