@@ -43,7 +43,7 @@ namespace Helper
             string response = string.Empty;
             try
             {
-                string _url = url + "/" + v;
+                string _url = $"{url}/{v}";
                 if (cache.isTheUrlDataInCache(_url)) {
                     response = cache.GetCacheByKey(_url);
                     Console.WriteLine("==========Get Cache Data==========");

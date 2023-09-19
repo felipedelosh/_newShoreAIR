@@ -169,7 +169,7 @@ namespace Business.Availability
                     }
                     else {
                         j.Price = totalPrice;
-                        j.Message += $"Error in convertion price.\nReturn value in USD\n";
+                        j.Message += "Error in convertion price.\nReturn value in USD\n";
                     }
                    
                 }
