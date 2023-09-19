@@ -9,7 +9,7 @@ namespace Business.Mapper
     {
         P IMap<P, T>.Map(T origin)
         {
-            var transport = new Transport();
+            Transport transport = new Transport();
 
             GetJsonFlightResponse flight = (GetJsonFlightResponse)Convert.ChangeType(origin, typeof(GetJsonFlightResponse));
 
