@@ -43,11 +43,11 @@ namespace newShoreAPI.Controllers
             {
                 if (_authentication.isTokenValid(Authorization))
                 {
-                    var request = new ModelRequesFlights() { Origin = origin, Destination = destination };
-                    var fligtsData = _availabilityBusines.GetJourney(request, Currience_selector);
+                    ModelRequesFlights request = new ModelRequesFlights() { Origin = origin, Destination = destination };
+                    Journey fligtsData = _availabilityBusines.GetJourney(request, Currience_selector);
 
                     //Export data to Json
-                    var endData = JsonConvert.SerializeObject(fligtsData);
+                    string endData = JsonConvert.SerializeObject(fligtsData);
                     return getStandardJsonResponse("200", "v1.0", endData);
                 }
                 else
