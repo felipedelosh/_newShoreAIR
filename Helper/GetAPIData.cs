@@ -40,7 +40,7 @@ namespace Helper
         /// <returns></returns>
         public string GetHTTPServiceVrX(string url, string v)
         {
-            var response = string.Empty;
+            string response = string.Empty;
             try
             {
                 string _url = url + "/" + v;
@@ -49,8 +49,8 @@ namespace Helper
                     Console.WriteLine("==========Get Cache Data==========");
                 }
                 else {
-                    var client = new RestClient(_url);
-                    var request = new RestRequest();
+                    RestClient client = new RestClient(_url);
+                    RestRequest request = new RestRequest();
                     request.Method = Method.Get;
                     request.AddHeader("Content-Type", "application/json");
                     RestResponse result = client.Execute(request);
