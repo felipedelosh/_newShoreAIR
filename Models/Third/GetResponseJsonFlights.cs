@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models.Third
+﻿namespace Models.Third
 {
     /// <summary>
     /// This class is create only when create obj of API call (appsettings.json["AppSettings"]["urlAPIFlights"])

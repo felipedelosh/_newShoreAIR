@@ -1,9 +1,8 @@
-using Autofac.Extensions.DependencyInjection;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using newShoreAPI.IOC;
 using NLog;
 using NLog.Web;
-using Autofac.Core;
 
 var _logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 _logger.Debug("init main");
@@ -81,7 +80,8 @@ catch (Exception e)
     _logger.Error(e, "The program stoped :( ");
     throw;
 }
-finally { 
+finally
+{
     NLog.LogManager.Shutdown();
 }
 

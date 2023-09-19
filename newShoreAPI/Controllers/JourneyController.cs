@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Nodes;
-using Models.Contracts;
-using Models;
-using Helper;
-using Newtonsoft.Json;
+﻿using Helper;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Models;
+using Models.Contracts;
+using Newtonsoft.Json;
 
 namespace newShoreAPI.Controllers
 {
@@ -19,7 +18,8 @@ namespace newShoreAPI.Controllers
 
 
 
-        public JourneyController(ILogger<JourneyController> logger, IAvailability availabilityBusines) {
+        public JourneyController(ILogger<JourneyController> logger, IAvailability availabilityBusines)
+        {
             _logger = logger;
             _availabilityBusines = availabilityBusines;
             _authentication = new Authentication();
@@ -28,7 +28,8 @@ namespace newShoreAPI.Controllers
         [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("Health")]
-        public dynamic getHealth() {
+        public dynamic getHealth()
+        {
             _logger.LogInformation("the user PING the API status");
             return getStandardJsonResponse("200", "v1.0", "the server is run :)");
         }
@@ -38,7 +39,8 @@ namespace newShoreAPI.Controllers
         [Route("Get")]
         public dynamic Get(string origin, string destination, string Authorization, string Currience_selector)
         {
-            try {
+            try
+            {
                 if (_authentication.isTokenValid(Authorization))
                 {
                     var request = new ModelRequesFlights() { Origin = origin, Destination = destination };
@@ -48,23 +50,27 @@ namespace newShoreAPI.Controllers
                     var endData = JsonConvert.SerializeObject(fligtsData);
                     return getStandardJsonResponse("200", "v1.0", endData);
                 }
-                else {
+                else
+                {
                     _logger.LogInformation("the user insert invalid token");
                     return getStandardJsonResponse("401", "v1.0", Authorization + ": is Invalid token");
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError("Internal Server Error Get()");
                 return getStandardJsonResponse("500", "v1.0", ex.ToString());
             }
-            
+
         }
 
         [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("getFlightsV0")]
-        public dynamic getFlightsV0() {
-            try {
+        public dynamic getFlightsV0()
+        {
+            try
+            {
                 return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV0());
             }
             catch (Exception ex)
@@ -134,7 +140,8 @@ namespace newShoreAPI.Controllers
         }
 
 
-        private dynamic getStandardJsonResponse(string _statusCode, string _metadata, string _data) {
+        private dynamic getStandardJsonResponse(string _statusCode, string _metadata, string _data)
+        {
             return new
             {
                 status = _statusCode,

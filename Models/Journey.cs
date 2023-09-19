@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Models
 {
     public class Journey
     {
-        public List<Flight> Flights { get; set; }   
+        public List<Flight> Flights { get; set; }
         public string Message { get; set; } // To say things to user
         public string Oigin { get; set; }
         public string Destination { get; set; }

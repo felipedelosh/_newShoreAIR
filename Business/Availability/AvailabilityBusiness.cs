@@ -6,23 +6,24 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Models.Third;
-using System.Linq.Expressions;
 using Helper.RoutesCalculator;
-using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Business.Availability
 {
     public class AvailabilityBusiness : IAvailability
     {
 
+        private readonly ILogger<AvailabilityBusiness> _logger;
         private readonly IConfiguration _iconfiguraion;
         private readonly GetAPIData getAPIData;
         private Graph routes;
         private ShortestPathFinder shortestPathFinder;
         private CurriencesConverter curriencesConverter;
 
-        public AvailabilityBusiness(IConfiguration iconfiguraion)
+        public AvailabilityBusiness(ILogger<AvailabilityBusiness> logger,IConfiguration iconfiguraion)
         {
+            _logger = logger;
             _iconfiguraion = iconfiguraion;
             getAPIData = new GetAPIData();
             routes = new Graph();
@@ -87,10 +88,12 @@ namespace Business.Availability
 
 
                 //Save the response
+                _logger.LogInformation("The user get DATA");
                 response = JsonConvert.SerializeObject(flightsResponse);
 
             }
             catch (Exception ex) {
+                _logger.LogError($"Error to call External API {ex.Message}");
                 response = ex.Message;
             }
 
@@ -195,6 +198,8 @@ namespace Business.Availability
                         //How to invoke a Transpor mapper?
                         //How to invoke a Journal mapper?
                         Transport t = new Transport();
+                        // mappert.trasport(t.F, t.F)
+                        // mapper.Journal(m.t, ...)
                         t.FlightCarrier = i.FlightCarrier;
                         t.FlightNumber  = i.FlightNumber;
                         f.Transport = t;
