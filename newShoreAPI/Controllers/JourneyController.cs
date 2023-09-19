@@ -23,6 +23,8 @@ namespace newShoreAPI.Controllers
             _logger = logger;
             _availabilityBusines = availabilityBusines;
             _authentication = new Authentication();
+            //Get Flights vr 0
+            _availabilityBusines.getFlightsV0();
         }
 
         [EnableCors("AllowOrigin")]
@@ -77,65 +79,6 @@ namespace newShoreAPI.Controllers
             {
                 _logger.LogError("Internal Server Error getFlightsV0()");
                 return getStandardJsonResponse("500", "ERROR", ex.ToString());
-            }
-        }
-
-
-
-
-        [HttpGet]
-        [Route("getFlightsV1")]
-        public dynamic getFlightsV1()
-        {
-            try
-            {
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV1());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Internal Server Error getFlightsV0()");
-                return getStandardJsonResponse("500", "ERROR", ex.ToString());
-            }
-        }
-
-        [EnableCors("AllowOrigin")]
-        [HttpGet]
-        [Route("getFlightsV2")]
-        public dynamic getFlightsV2()
-        {
-            try
-            {
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getFlightsV2());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Internal Server Error getFlightsV0()");
-                return getStandardJsonResponse("500", "ERROR", ex.ToString());
-            }
-        }
-
-        [EnableCors("AllowOrigin")]
-        [HttpGet]
-        [Route("GetGraph")]
-        public dynamic GetGraph(string Authorization)
-        {
-            try
-            {
-                if (_authentication.isTokenValid(Authorization))
-                {
-                    string data = _availabilityBusines.getGraph();
-                    return getStandardJsonResponse("200", "v1.0", data);
-                }
-                else
-                {
-                    _logger.LogInformation("the user insert invalid token");
-                    return getStandardJsonResponse("401", "v1.0", Authorization + ": is Invalid token");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Internal Server Error Get()");
-                return getStandardJsonResponse("500", "v1.0", ex.ToString());
             }
         }
 

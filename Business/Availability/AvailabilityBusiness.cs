@@ -184,7 +184,7 @@ namespace Business.Availability
         /// <param name="ArrivalStation"></param>
         /// <returns></returns>
         private Flight searchFlightInCache(string DepartureStation, string ArrivalStation) {
-            Flight f = new Flight();
+            Flight tempFlight = new Flight();
 
             try
             {
@@ -197,25 +197,25 @@ namespace Business.Availability
                     if (i.DepartureStation == DepartureStation && i.ArrivalStation == ArrivalStation) { 
                         //How to invoke a Transpor mapper?
                         //How to invoke a Journal mapper?
-                        Transport t = new Transport();
+                        Transport tempTransport = new Transport();
                         // mappert.trasport(t.F, t.F)
                         // mapper.Journal(m.t, ...)
-                        t.FlightCarrier = i.FlightCarrier;
-                        t.FlightNumber  = i.FlightNumber;
-                        f.Transport = t;
-                        f.Origin = i.DepartureStation;
-                        f.Destination = i.ArrivalStation;
-                        f.Price = i.Price;
+                        tempTransport.FlightCarrier = i.FlightCarrier;
+                        tempTransport.FlightNumber  = i.FlightNumber;
+                        tempFlight.Transport = tempTransport;
+                        tempFlight.Origin = i.DepartureStation;
+                        tempFlight.Destination = i.ArrivalStation;
+                        tempFlight.Price = i.Price;
                     }   
                 }
 
                 _logger.LogInformation("The user get information via cache.");
             }
             catch (Exception ex) {
-                _logger.LogError("Error while the user search information in cache.");
+                _logger.LogError($"Error while the user search information in cache. {ex}");
       
             }
-            return f;
+            return tempFlight;
         }
 
     }
