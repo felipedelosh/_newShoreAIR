@@ -23,8 +23,6 @@ namespace newShoreAPI.Controllers
             _logger = logger;
             _availabilityBusines = availabilityBusines;
             _authentication = new Authentication();
-            //Get Flights vr 0
-            _availabilityBusines.getFlightsV0();
         }
 
         [EnableCors("AllowOrigin")]

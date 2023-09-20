@@ -132,6 +132,11 @@ namespace Business.Availability
             Journey response = new Journey();
             try
             {
+                //Get Flights if not exists routes
+                if (routes.isEmpty()) {
+                    getFlightsV0();
+                }
+
                 // Calculates a route
                 string _origin = requestF.Origin;
                 string _destination = requestF.Destination;
