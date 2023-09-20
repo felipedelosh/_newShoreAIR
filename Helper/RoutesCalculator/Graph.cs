@@ -67,7 +67,7 @@ namespace Helper.RoutesCalculator
 
 
         public bool isEmpty() {
-            return node.Count != 0;
+            return node.Count == 0;
         }
 
 

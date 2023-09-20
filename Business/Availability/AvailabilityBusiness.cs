@@ -142,6 +142,14 @@ namespace Business.Availability
                 string _destination = requestF.Destination;
               
                 List<string> shortestPath = shortestPathFinder.FindShortestPath(_origin, _destination);
+                Console.WriteLine("====================Lista======================");
+                Console.WriteLine($"Estado del grafo: {routes.isEmpty()}");
+                Console.WriteLine($"{routes.getRoutes()}");
+                foreach (var item in shortestPath)
+                {
+                    Console.WriteLine(item);
+                }
+                
 
                 //Contruct a response
                 int sizeOfResponse = shortestPath.Count;
