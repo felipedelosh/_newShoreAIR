@@ -154,8 +154,8 @@ namespace Business.Availability
                         tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, flight.Price);
                         if (tempCurrienceConverter >= 0) {
                             flight.Price = tempCurrienceConverter;
-                            totalPrice += flight.Price;
                         }
+                        totalPrice += flight.Price;
                     }
 
 
@@ -167,7 +167,10 @@ namespace Business.Availability
                         response.currienceISO = Currience_selector;
                     }
                     else {
-                        response.Message += $"Error to GET price in {Currience_selector}";
+                        response.Message += $".Error to GET price in {Currience_selector}";
+                        response.Price = totalPrice;
+                        response.currienceISO = "USD";
+
                     }
 
                 }
