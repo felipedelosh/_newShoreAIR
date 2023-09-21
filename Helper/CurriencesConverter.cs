@@ -1,6 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Autofac;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Models.Contracts;
 
 namespace Helper
 {
@@ -9,15 +12,21 @@ namespace Helper
     /// This is a Currencies converter. the base price is USD 
     /// use GetInConvertion(ISO_CODE, $) to calculate a convertion
     /// </summary>
-    public class CurriencesConverter
+    public class CurriencesConverter : ICurriencesConverter
     {
+        private readonly ILogger<CurriencesConverter> _logger;
         private Dictionary<string, double> _currencies;
 
-        public CurriencesConverter(string data) {
+        public CurriencesConverter(ILogger<CurriencesConverter> logger) {
+            _logger = logger;
+        }
+
+        public void updateCurriences(string data) {
             _currencies = new Dictionary<string, double>();
             //Default currience by api
-            
-            try {
+
+            try
+            {
                 //Update 
                 Dictionary<string, object> jsonCurriencesData = JsonConvert.DeserializeObject<Dictionary<string, object>>(data);
                 _currencies[jsonCurriencesData["base"].ToString()] = Convert.ToDouble(1); ; //USD = 1
@@ -27,14 +36,14 @@ namespace Helper
                 {
                     string key = i.Key;
                     double value = Convert.ToDouble(i.Value);
-                   _currencies[key] = value;
+                    _currencies[key] = value;
                 }
-                
-                //Loger exito en curriences
+
+                _logger.LogInformation("The user get and update information of curriences");
             }
             catch (Exception ex)
             {
-                //Logger error en curriences
+                _logger.LogError($"Error While the user GET and Update curriences {ex}");
             }
 
         }
@@ -52,6 +61,7 @@ namespace Helper
                 return convertQTY;
             }
             catch {
+                _logger.LogError($"The user inser a invalid currience {isoCurrience}");
                 return -99999999;
             }
         }

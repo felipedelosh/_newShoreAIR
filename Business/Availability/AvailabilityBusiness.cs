@@ -22,13 +22,14 @@ namespace Business.Availability
         private readonly IMap<List<Flight>, List<GetJsonFlightResponse>> _map;
         private readonly ILogger<AvailabilityBusiness> _logger;
         private readonly IConfiguration _iconfiguraion;
-        private CurriencesConverter curriencesConverter;
+        private ICurriencesConverter _curriencesConverter;
         private IRouteCalculator _routeCalculator;
         private IGetAPIData _getAPIData;
 
         public AvailabilityBusiness(
             ILogger<AvailabilityBusiness> logger,
             IConfiguration iconfiguraion,
+            ICurriencesConverter curriencesConverter,
             IMapper mapper,
             IMap<List<Flight>, List<GetJsonFlightResponse>> map,
             IRouteCalculator routeCalculator,
@@ -41,12 +42,14 @@ namespace Business.Availability
             _logger = logger;
             _iconfiguraion = iconfiguraion;
 
+            _curriencesConverter = curriencesConverter;
+
             _getAPIData = getAPIData;
 
             //Update curriences
             string url = _iconfiguraion.GetSection("AppSettings").GetSection("applicationCurriences").Value;
-            string updateCurriences = getAPIData.GetDicHTTPServiceCurriences(url);
-            curriencesConverter = new CurriencesConverter(updateCurriences);
+            string updateCurriencesData = getAPIData.GetDicHTTPServiceCurriences(url);
+            _curriencesConverter.updateCurriences(updateCurriencesData);
 
             _routeCalculator = routeCalculator;
         }
@@ -158,7 +161,7 @@ namespace Business.Availability
                         foreach (Flight flight in response.Flights)
                         {
                             totalOriginalPrice += flight.Price;
-                            tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, flight.Price);
+                            tempCurrienceConverter = _curriencesConverter.GetInConvertion(Currience_selector, flight.Price);
                             if (tempCurrienceConverter >= 0)
                             {
                                 flight.Price = tempCurrienceConverter;
@@ -168,7 +171,7 @@ namespace Business.Availability
 
 
                         //Put total Prices
-                        tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, totalOriginalPrice);
+                        tempCurrienceConverter = _curriencesConverter.GetInConvertion(Currience_selector, totalOriginalPrice);
                         if (tempCurrienceConverter >= 0)
                         {
                             response.Price = tempCurrienceConverter;

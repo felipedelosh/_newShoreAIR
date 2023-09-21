@@ -18,6 +18,8 @@ namespace newShoreAPI.IOC
 
             builder.RegisterType<GetAPIData>().As<IGetAPIData>().SingleInstance();
 
+            builder.RegisterType<CurriencesConverter>().As<ICurriencesConverter>().SingleInstance();
+
             builder.RegisterType<RouteCalculator>().As<IRouteCalculator>().SingleInstance();
 
             builder.RegisterType<APIResponseFlights<List<Flight>, List<GetJsonFlightResponse>>>().As<IMap<List<Flight>, List<GetJsonFlightResponse>>>().SingleInstance();

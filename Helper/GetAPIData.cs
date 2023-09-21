@@ -1,12 +1,8 @@
-﻿using Autofac;
-using Helper.Cache;
-using Helper.RoutesCalculator;
+﻿using Helper.Cache;
 using Microsoft.Extensions.Logging;
 using Models.Contracts;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Security.Policy;
 
 namespace Helper
 {
