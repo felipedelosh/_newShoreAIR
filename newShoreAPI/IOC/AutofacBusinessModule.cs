@@ -5,6 +5,7 @@ using Business.Mapper;
 using Models;
 using Models.Contracts;
 using Models.Third;
+using Helper.RoutesCalculator;
 
 namespace newShoreAPI.IOC
 {
@@ -14,12 +15,13 @@ namespace newShoreAPI.IOC
         {
             builder.RegisterType<AvailabilityBusiness>().As<IAvailability>().SingleInstance();
 
+            builder.RegisterType<RouteCalculator>().As<IRouteCalculator>().SingleInstance();
+
             builder.RegisterType<APIResponseFlights<List<Flight>, List<GetJsonFlightResponse>>>().As<IMap<List<Flight>, List<GetJsonFlightResponse>>>().SingleInstance();
 
             builder.RegisterType<Flight_Transport<Transport, GetJsonFlightResponse>>().As<IMap<Transport, GetJsonFlightResponse>>().SingleInstance();
 
-
-
+           
 
             builder.Register(context => new MapperConfiguration(cfg =>
             {

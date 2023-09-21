@@ -10,6 +10,7 @@ using Helper.RoutesCalculator;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using System.Linq;
+using System.Security.AccessControl;
 
 namespace Business.Availability
 {
@@ -19,24 +20,23 @@ namespace Business.Availability
         //Mapper
         private readonly IMapper _mapper;
         private readonly IMap<List<Flight>, List<GetJsonFlightResponse>> _map;
-
         private readonly ILogger<AvailabilityBusiness> _logger;
         private readonly IConfiguration _iconfiguraion;
         private readonly GetAPIData getAPIData;
-        private RouteCalculator routeCalculator;
         private CurriencesConverter curriencesConverter;
+        private IRouteCalculator _routeCalculator;
 
         public AvailabilityBusiness(
             ILogger<AvailabilityBusiness> logger,
             IConfiguration iconfiguraion,
             IMapper mapper,
-            IMap<List<Flight>, List<GetJsonFlightResponse>> map
+            IMap<List<Flight>, List<GetJsonFlightResponse>> map,
+            IRouteCalculator routeCalculator
             )
         {
             _mapper = mapper;
             _map = map;
-
-
+            
             _logger = logger;
             _iconfiguraion = iconfiguraion;
             getAPIData = new GetAPIData(); //Como le mando el logger?
@@ -44,6 +44,8 @@ namespace Business.Availability
             string url = _iconfiguraion.GetSection("AppSettings").GetSection("applicationCurriences").Value;
             string updateCurriences = getAPIData.GetDicHTTPServiceCurriences(url);
             curriencesConverter = new CurriencesConverter(updateCurriences);
+
+            _routeCalculator = routeCalculator;
         }
         
 
@@ -143,9 +145,7 @@ namespace Business.Availability
                     IEnumerable<Flight> flights = new List<Flight>();
                     flights = _map.Map(flightsResponse);
 
-                    //flights = flights.Where(x => x.Origin.Equals(_origin) && x.Destination.Equals(_destination));
-                    routeCalculator = new RouteCalculator(_origin, _destination, flights);
-                    response = routeCalculator.getRoute();
+                    response = _routeCalculator.GetRoute(_origin, _destination, flights);
 
                     //Put PRICES in all Fligths
                     if (!(response.Flights is null)) {

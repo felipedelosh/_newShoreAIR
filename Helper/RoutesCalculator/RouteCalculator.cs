@@ -1,19 +1,35 @@
-﻿using Models;
+﻿using Autofac;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Models.Contracts;
 
 namespace Helper.RoutesCalculator
 {
-    public class RouteCalculator
+    public class RouteCalculator : IRouteCalculator
     {
         private string _origin;
         private string _destination;
         private IEnumerable<Flight> _ArrFlights;
         private int LenOfArr;
         private List<string> ControlDestinations;
+        private readonly ILogger<RouteCalculator> _logger;
 
-        public RouteCalculator(string origin, string destination, IEnumerable<Flight> flights) {
+
+
+        public RouteCalculator(ILogger<RouteCalculator> logger) {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// CALLED in auto by GetRoute
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="destination"></param>
+        /// <param name="flights"></param>
+        public void InitRouteCalculator(string origin, string destination, IEnumerable<Flight> flights) {
             _ArrFlights = flights;
             _origin = origin;
             _destination = destination;
@@ -35,13 +51,13 @@ namespace Helper.RoutesCalculator
 
         }
 
-
         /// <summary>
         /// Calculate a route Flight A to Flight B
         /// You send the params when instance the class(o, d, f[])
         /// </summary>
         /// <returns>Journey</returns>
-        public Journey getRoute() { 
+        public Journey GetRoute(string origin, string destination, IEnumerable<Flight> flights) { 
+            InitRouteCalculator(origin, destination, flights);
             Journey journey = new Journey();
 
             try
@@ -73,9 +89,11 @@ namespace Helper.RoutesCalculator
                 FindRouteRecursive(journey.Oigin, journey.Destination, route);
                 journey.Flights = route;
                 journey.Message = $"Total Flights : {journey.Flights.Count}";
+                _logger.LogInformation("The user get journey route information");
 
             }
             catch (Exception ex){
+                _logger.LogError($"Error in route of Journey {ex}");
                 journey.Message = "Fatal Error To calculate IT";
             }
 

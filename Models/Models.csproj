@@ -199,6 +199,7 @@
   <ItemGroup>
     <Compile Include="Contracts\IAvailability.cs" />
     <Compile Include="Contracts\IMap.cs" />
+    <Compile Include="Contracts\IRouteCalculator.cs" />
     <Compile Include="Flight.cs" />
     <Compile Include="Journey.cs" />
     <Compile Include="ModelRequesFlights.cs" />
