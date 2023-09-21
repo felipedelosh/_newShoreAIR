@@ -1,30 +1,25 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Models;
-using Helper;
 using Models.Contracts;
+using Models.Third;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Models.Third;
-using Helper.RoutesCalculator;
-using Microsoft.Extensions.Logging;
-using AutoMapper;
-using System.Linq;
-using System.Security.AccessControl;
 
 namespace Business.Availability
 {
     public class AvailabilityBusiness : IAvailability
     {
 
-        //Mapper
         private readonly IMapper _mapper;
         private readonly IMap<List<Flight>, List<GetJsonFlightResponse>> _map;
         private readonly ILogger<AvailabilityBusiness> _logger;
         private readonly IConfiguration _iconfiguraion;
-        private ICurriencesConverter _curriencesConverter;
-        private IRouteCalculator _routeCalculator;
-        private IGetAPIData _getAPIData;
+        private readonly ICurriencesConverter _curriencesConverter;
+        private readonly IRouteCalculator _routeCalculator;
+        private readonly IGetAPIData _getAPIData;
 
         public AvailabilityBusiness(
             ILogger<AvailabilityBusiness> logger,
@@ -49,22 +44,22 @@ namespace Business.Availability
             //Update curriences
             string url = _iconfiguraion.GetSection("AppSettings").GetSection("applicationCurriences").Value;
             string updateCurriencesData = getAPIData.GetDicHTTPServiceCurriences(url);
-            _curriencesConverter.updateCurriences(updateCurriencesData);
+            _curriencesConverter.UpdateCurriences(updateCurriencesData);
 
             _routeCalculator = routeCalculator;
         }
-        
+
 
         /// <summary>
         /// Return a simple list of all flights to show in a banner
         /// </summary>
         /// <returns></returns>
-        public string getAllFlights()
+        public string GetAllFlights()
         {
             string response = "";
             try
             {
-                string data = getFlightsV0();
+                string data = GetFlightsV0();
                 List<GetJsonFlightResponse> flights = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(data);
 
                 foreach (var i in flights)
@@ -73,23 +68,24 @@ namespace Business.Availability
                 }
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError($"Error to get ALL flights routes {ex}");
             }
             return response;
         }
 
-        public string getFlightsV0()
+        public string GetFlightsV0()
         {
             return GetResponseAPIvrX(0);
         }
 
-        public string getFlightsV1()
+        public string GetFlightsV1()
         {
             return GetResponseAPIvrX(1);
         }
 
-        public string getFlightsV2()
+        public string GetFlightsV2()
         {
             return GetResponseAPIvrX(2);
         }
@@ -97,7 +93,8 @@ namespace Business.Availability
         private string GetResponseAPIvrX(int v)
         {
             string response = "";
-            try {
+            try
+            {
                 string url = _iconfiguraion.GetSection("AppSettings").GetSection("urlAPIFlights").Value;
                 var result = "";
 
@@ -123,7 +120,8 @@ namespace Business.Availability
                 response = JsonConvert.SerializeObject(flightsResponse);
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError($"Error to call External API {ex.Message}");
                 response = ex.Message;
             }
@@ -137,7 +135,7 @@ namespace Business.Availability
             try
             {
                 //Get the API data
-                string data = getFlightsV0();
+                string data = GetFlightsV0();
                 //Parse
                 List<GetJsonFlightResponse> flightsResponse = JsonConvert.DeserializeObject<List<GetJsonFlightResponse>>(data);
 
@@ -154,7 +152,8 @@ namespace Business.Availability
                     response = _routeCalculator.GetRoute(_origin, _destination, flights);
 
                     //Put PRICES in all Fligths
-                    if (!(response.Flights is null)) {
+                    if (!(response.Flights is null))
+                    {
                         double totalConvertPrice = 0; // Save all prices when the conversion is done
                         double totalOriginalPrice = 0; // Save all prices original API Json
                         double tempCurrienceConverter = 0; // temporal to convertion Flights prices
@@ -175,26 +174,28 @@ namespace Business.Availability
                         if (tempCurrienceConverter >= 0)
                         {
                             response.Price = tempCurrienceConverter;
-                            response.currienceISO = Currience_selector;
+                            response.CurrienceISO = Currience_selector;
                             response.Message += $".The price is a convertion: {totalConvertPrice}{Currience_selector}";
                         }
                         else
                         {
                             response.Message += $".Error to GET price in {Currience_selector}";
                             response.Price = totalOriginalPrice;
-                            response.currienceISO = "USD";
+                            response.CurrienceISO = "USD";
 
                         }
                     }
                 }
-                else {
+                else
+                {
                     response.Message = $"Imposible to calculate External API returns NULL";
                 }
 
-          
+
                 _logger.LogInformation("The user get journey information");
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 _logger.LogError($"Error in GetJourney {ex}");
             }
 

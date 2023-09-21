@@ -21,7 +21,7 @@ namespace Helper
             _logger = logger;
         }
 
-        public void updateCurriences(string data) {
+        public void UpdateCurriences(string data) {
             _currencies = new Dictionary<string, double>();
             //Default currience by api
 

@@ -10,10 +10,8 @@
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public bool isTokenValid(string token)
+        public bool IsTokenValid(string token)
         {
-            //Simulate to get Database : get Token By User
-            const string TOKEN = "kmzwa8awaa";
 
             try
             {

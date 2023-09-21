@@ -10,7 +10,7 @@ namespace Models
         public string Destination { get; set; }
         public double Price { get; set; }
 
-        public string currienceISO { get; set; }
+        public string CurrienceISO { get; set; }
 
     }
 }

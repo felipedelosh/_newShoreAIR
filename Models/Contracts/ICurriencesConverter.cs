@@ -2,7 +2,7 @@
 {
     public interface ICurriencesConverter
     {
-        void updateCurriences(string data);
+        void UpdateCurriences(string data);
 
         double GetInConvertion(string isoCurrience, double qty);
     }

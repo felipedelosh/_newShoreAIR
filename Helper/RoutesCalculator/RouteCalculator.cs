@@ -13,7 +13,6 @@ namespace Helper.RoutesCalculator
         private string _origin;
         private string _destination;
         private IEnumerable<Flight> _ArrFlights;
-        private int LenOfArr;
         private List<string> ControlDestinations;
         private readonly ILogger<RouteCalculator> _logger;
 
@@ -34,7 +33,6 @@ namespace Helper.RoutesCalculator
             _origin = origin;
             _destination = destination;
             ControlDestinations = new List<string>();
-            LenOfArr = 0;
             foreach (Flight flight in _ArrFlights)
             {
                 if (!ControlDestinations.Contains(flight.Origin))
@@ -46,7 +44,6 @@ namespace Helper.RoutesCalculator
                 {
                     ControlDestinations.Add(flight.Destination);
                 }
-                LenOfArr++;
             }
 
         }

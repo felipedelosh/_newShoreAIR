@@ -6,9 +6,9 @@ namespace Models.Contracts
 
         Journey GetJourney(ModelRequesFlights requestF, string Currience_selector); // Return a Fligth A, B
 
-        string getAllFlights(); // Return a List with all Fligths
+        string GetAllFlights(); // Return a List with all Fligths
 
-        string getFlightsV0(); // Load a FLights of newShore API
+        string GetFlightsV0(); // Load a FLights of newShore API
     }
 
 }

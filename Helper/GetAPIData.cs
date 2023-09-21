@@ -9,7 +9,7 @@ namespace Helper
     public class GetAPIData : IGetAPIData
     {
         private readonly ILogger<GetAPIData> _logger;
-        private CacheController cache = new CacheController();
+        private readonly CacheController cache = new CacheController();
        
 
         public GetAPIData(ILogger<GetAPIData> logger) {

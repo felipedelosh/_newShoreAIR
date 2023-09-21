@@ -28,10 +28,10 @@ namespace newShoreAPI.Controllers
         [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("Health")]
-        public dynamic getHealth()
+        public dynamic GetHealth()
         {
             _logger.LogInformation("the user PING the API status");
-            return getStandardJsonResponse("200", "v1.0", "the server is run :)");
+            return GetStandardJsonResponse("200", "v1.0", "the server is run :)");
         }
 
         [EnableCors("AllowOrigin")]
@@ -41,25 +41,25 @@ namespace newShoreAPI.Controllers
         {
             try
             {
-                if (_authentication.isTokenValid(Authorization))
+                if (_authentication.IsTokenValid(Authorization))
                 {
                     ModelRequesFlights request = new ModelRequesFlights() { Origin = origin, Destination = destination };
                     Journey fligtsData = _availabilityBusines.GetJourney(request, Currience_selector);
 
                     //Export data to Json
                     string endData = JsonConvert.SerializeObject(fligtsData);
-                    return getStandardJsonResponse("200", "v1.0", endData);
+                    return GetStandardJsonResponse("200", "v1.0", endData);
                 }
                 else
                 {
                     _logger.LogInformation("the user insert invalid token");
-                    return getStandardJsonResponse("401", "v1.0", Authorization + ": is Invalid token");
+                    return GetStandardJsonResponse("401", "v1.0", Authorization + ": is Invalid token");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Internal Server Error Get()");
-                return getStandardJsonResponse("500", "v1.0", ex.ToString());
+                return GetStandardJsonResponse("500", "v1.0", ex.ToString());
             }
 
         }
@@ -67,21 +67,21 @@ namespace newShoreAPI.Controllers
         [EnableCors("AllowOrigin")]
         [HttpGet]
         [Route("getAllFlights")]
-        public dynamic getAllFlights()
+        public dynamic GetAllFlights()
         {
             try
             {
-                return getStandardJsonResponse("200", "OK", _availabilityBusines.getAllFlights());
+                return GetStandardJsonResponse("200", "OK", _availabilityBusines.GetAllFlights());
             }
             catch (Exception ex)
             {
                 _logger.LogError("Internal Server Error getFlightsV0()");
-                return getStandardJsonResponse("500", "ERROR", ex.ToString());
+                return GetStandardJsonResponse("500", "ERROR", ex.ToString());
             }
         }
 
 
-        private dynamic getStandardJsonResponse(string _statusCode, string _metadata, string _data)
+        private dynamic GetStandardJsonResponse(string _statusCode, string _metadata, string _data)
         {
             return new
             {
