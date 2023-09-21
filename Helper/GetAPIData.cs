@@ -76,11 +76,11 @@ namespace Helper
                 }
 
 
-                //_logger.LogInformation("The user get External Api information");
+                _logger.LogInformation("The user get External Api information (newshore Flights)");
             }
             catch (Exception ex)
             {
-               // _logger.LogError($"Error to get data in external API {ex}");
+               _logger.LogError($"Error to get data in external API (newshore Flights) {ex}");
                 response = $"API_GET_ERR: {ex}";
             }
 
@@ -107,14 +107,14 @@ namespace Helper
                         dataCurriences = result.Content;
                     }
                 }
-                else { 
-                    //LOgger falló consumir
+                else {
+                    _logger.LogInformation("The user get External Api information (Curriencies)");
                 }
 
 
             }
             catch (Exception ex) {
-                //Logger hay error
+                _logger.LogError($"Error to get data in external API (Curriencies) {ex}");
             }
 
             return dataCurriences;
