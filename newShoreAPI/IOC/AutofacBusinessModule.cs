@@ -6,6 +6,7 @@ using Models;
 using Models.Contracts;
 using Models.Third;
 using Helper.RoutesCalculator;
+using Helper;
 
 namespace newShoreAPI.IOC
 {
@@ -14,6 +15,8 @@ namespace newShoreAPI.IOC
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<AvailabilityBusiness>().As<IAvailability>().SingleInstance();
+
+            builder.RegisterType<GetAPIData>().As<IGetAPIData>().SingleInstance();
 
             builder.RegisterType<RouteCalculator>().As<IRouteCalculator>().SingleInstance();
 

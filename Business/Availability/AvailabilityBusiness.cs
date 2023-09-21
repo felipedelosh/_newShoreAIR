@@ -22,24 +22,27 @@ namespace Business.Availability
         private readonly IMap<List<Flight>, List<GetJsonFlightResponse>> _map;
         private readonly ILogger<AvailabilityBusiness> _logger;
         private readonly IConfiguration _iconfiguraion;
-        private readonly GetAPIData getAPIData;
         private CurriencesConverter curriencesConverter;
         private IRouteCalculator _routeCalculator;
+        private IGetAPIData _getAPIData;
 
         public AvailabilityBusiness(
             ILogger<AvailabilityBusiness> logger,
             IConfiguration iconfiguraion,
             IMapper mapper,
             IMap<List<Flight>, List<GetJsonFlightResponse>> map,
-            IRouteCalculator routeCalculator
+            IRouteCalculator routeCalculator,
+            IGetAPIData getAPIData
             )
         {
             _mapper = mapper;
             _map = map;
-            
+
             _logger = logger;
             _iconfiguraion = iconfiguraion;
-            getAPIData = new GetAPIData(); //Como le mando el logger?
+
+            _getAPIData = getAPIData;
+
             //Update curriences
             string url = _iconfiguraion.GetSection("AppSettings").GetSection("applicationCurriences").Value;
             string updateCurriences = getAPIData.GetDicHTTPServiceCurriences(url);
@@ -98,13 +101,13 @@ namespace Business.Availability
                 switch (v)
                 {
                     case 0:
-                        result = getAPIData.GetHTTPServiceVr0(url);
+                        result = _getAPIData.GetHTTPServiceVr0(url);
                         break;
                     case 1:
-                        result = getAPIData.GetHTTPServiceVr1(url);
+                        result = _getAPIData.GetHTTPServiceVr1(url);
                         break;
                     case 2:
-                        result = getAPIData.GetHTTPServiceVr2(url);
+                        result = _getAPIData.GetHTTPServiceVr2(url);
                         break;
                     default:
                         return "NO VALID OPTION";

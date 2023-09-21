@@ -1,5 +1,8 @@
-﻿using Helper.Cache;
+﻿using Autofac;
+using Helper.Cache;
+using Helper.RoutesCalculator;
 using Microsoft.Extensions.Logging;
+using Models.Contracts;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -7,14 +10,14 @@ using System.Security.Policy;
 
 namespace Helper
 {
-    public class GetAPIData
+    public class GetAPIData : IGetAPIData
     {
-
+        private readonly ILogger<GetAPIData> _logger;
         private CacheController cache = new CacheController();
        
 
-        public GetAPIData() {
-            //Como se agrega otro logger?
+        public GetAPIData(ILogger<GetAPIData> logger) {
+            _logger = logger;
         }
 
         public string GetHTTPServiceVr0(string url)
