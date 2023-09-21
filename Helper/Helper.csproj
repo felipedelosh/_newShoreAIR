@@ -160,12 +160,16 @@
     <Compile Include="CurriencesConverter.cs" />
     <Compile Include="GetAPIData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoutesCalculator\Edge.cs" />
-    <Compile Include="RoutesCalculator\Graph.cs" />
-    <Compile Include="RoutesCalculator\ShortestPathFinder.cs" />
+    <Compile Include="RoutesCalculator\RouteCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{47bbfece-602e-4652-8090-cabe75eb0792}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
