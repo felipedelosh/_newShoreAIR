@@ -45,12 +45,14 @@ namespace Helper
         /// <param name="isoCurrience"></param>
         /// <param name="qty"></param>
         /// <returns></returns>
-        public Double GetInConvertion(string isoCurrience, double qty) {
+        public double GetInConvertion(string isoCurrience, double qty) {
             try {
-                return qty * _currencies[isoCurrience];
+                double convertQTY = qty * _currencies[isoCurrience];
+                convertQTY = Math.Round(convertQTY, 2);
+                return convertQTY;
             }
             catch {
-                return -9999999;
+                return -99999999;
             }
         }
 

@@ -148,31 +148,38 @@ namespace Business.Availability
                     response = routeCalculator.getRoute();
 
                     //Put PRICES in all Fligths
-                    double totalPrice = 0;
-                    double tempCurrienceConverter = 0;
-                    foreach (Flight flight in response.Flights) {
-                        tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, flight.Price);
-                        if (tempCurrienceConverter >= 0) {
-                            flight.Price = tempCurrienceConverter;
+                    if (!(response.Flights is null)) {
+                        double totalConvertPrice = 0; // Save all prices when the conversion is done
+                        double totalOriginalPrice = 0; // Save all prices original API Json
+                        double tempCurrienceConverter = 0; // temporal to convertion Flights prices
+                        foreach (Flight flight in response.Flights)
+                        {
+                            totalOriginalPrice += flight.Price;
+                            tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, flight.Price);
+                            if (tempCurrienceConverter >= 0)
+                            {
+                                flight.Price = tempCurrienceConverter;
+                                totalConvertPrice += flight.Price;
+                            }
                         }
-                        totalPrice += flight.Price;
+
+
+                        //Put total Prices
+                        tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, totalOriginalPrice);
+                        if (tempCurrienceConverter >= 0)
+                        {
+                            response.Price = tempCurrienceConverter;
+                            response.currienceISO = Currience_selector;
+                            response.Message += $".The price is a convertion: {totalConvertPrice}{Currience_selector}";
+                        }
+                        else
+                        {
+                            response.Message += $".Error to GET price in {Currience_selector}";
+                            response.Price = totalOriginalPrice;
+                            response.currienceISO = "USD";
+
+                        }
                     }
-
-
-                    //Put total Prices
-                    tempCurrienceConverter = curriencesConverter.GetInConvertion(Currience_selector, totalPrice);
-                    if (tempCurrienceConverter >= 0)
-                    {
-                        response.Price = tempCurrienceConverter;
-                        response.currienceISO = Currience_selector;
-                    }
-                    else {
-                        response.Message += $".Error to GET price in {Currience_selector}";
-                        response.Price = totalPrice;
-                        response.currienceISO = "USD";
-
-                    }
-
                 }
                 else {
                     response.Message = $"Imposible to calculate External API returns NULL";
